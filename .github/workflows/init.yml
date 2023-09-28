@@ -1,0 +1,25 @@
+name: Init Repository
+
+on:
+  workflow_dispatch:
+
+jobs:
+  init:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - name: Vite init
+      run: cd ${{ runner.temp }} && npm create vite@latest webapp -- --template react-ts
+    - name: Copy in results
+      run: cp -r ${{ runner.temp }}/* .
+    - name: Commit
+      run: git commit -a -m "Vite init"
+    - name: Push back to main
+      uses: ad-m/github-push-action@master
